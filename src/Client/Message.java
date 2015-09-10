@@ -15,21 +15,25 @@ public class Message {
     
     private byte[] byteArray;
     
-    private final byte startByte = 0x78;
+    private final byte startByte = (byte) 0x78;
     private byte idByte;
-    private final byte messageCodeByte = 0x72;
+    private byte messageCodeByte;
     private byte payloadLengthByte;
     private byte[] messageBytes;
     
     private final byte[][] actionMessages = new byte[][] {
         new byte[] {},
         new byte[] {
+            // hello
             (byte)0x68, (byte)0x65, (byte)0x6c, (byte)0x6c, (byte)0x6f
         }, new byte[] {
+            // ok
             (byte)0x6f, (byte)0x6b
         }, new byte[] {
+            // yes
             (byte)0x79, (byte)0x65, (byte)0x73
         }, new byte[] {
+            // no
             (byte)0x6e, (byte)0x6f
         }
     };
@@ -38,8 +42,9 @@ public class Message {
         unpackMessage(message);
     }
     
-    Message(byte idByte, byte payloadLengthByte, byte messageCodeByte, byte[] messageBytes) {
+    Message(byte idByte, byte messageCodeByte, byte payloadLengthByte, byte[] messageBytes) {
         this.idByte = idByte;
+        this.messageCodeByte = messageCodeByte;
         this.payloadLengthByte = payloadLengthByte;
         this.messageBytes = messageBytes;
         
@@ -48,6 +53,7 @@ public class Message {
     
     Message(int action) {
         this.idByte = (byte) 0x05;
+        this.messageCodeByte = (byte) 0x72;
         byte[] deleteMe = intToByteArray(actionMessages[action].length + 4);
         this.payloadLengthByte = (byte) deleteMe[deleteMe.length - 1];
         this.messageBytes = actionMessages[action];
@@ -57,6 +63,10 @@ public class Message {
     
     public byte[] getByteArray() {
         return this.byteArray;
+    }
+    
+    public byte getMessageCodeByte() {
+        return this.messageCodeByte;
     }
     
     private void packMessage() {
@@ -76,7 +86,7 @@ public class Message {
         for (int i = 0; i < this.messageBytes.length; i++) {
             byteArray[i + 4] = this.messageBytes[i];
         }
-        
+        System.out.println("");
         
     }
     
@@ -84,6 +94,7 @@ public class Message {
         if (this.isMessageFormat(message)) {
             this.byteArray = message;
             this.idByte = message[1];
+            this.messageCodeByte = message[2];
             this.payloadLengthByte = message[3];
             
             

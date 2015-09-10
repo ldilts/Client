@@ -5,6 +5,7 @@
  */
 package Client;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,16 +25,12 @@ public class Client extends javax.swing.JFrame {
 
     private Socket clientSocket;
     
-    private BufferedReader input;
+//    private BufferedReader input;
     private DataInputStream dataInput;
-    private PrintStream output;
+//    private PrintStream output;
     private DataOutputStream dataOutput;
     
-    private final String actionOne = "Action 1";
-    private final String actionTwo = "Action 2";
-    private final String actionThree = "Action 3";
-    
-    private Scanner scan = new Scanner(System.in);
+//    private Scanner scan = new Scanner(System.in);
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     /**
@@ -57,6 +54,9 @@ public class Client extends javax.swing.JFrame {
         clientComboBox = new javax.swing.JComboBox();
         clientTextField = new javax.swing.JTextField();
         clientButton = new javax.swing.JButton();
+        redPanel = new javax.swing.JPanel();
+        greenPanel = new javax.swing.JPanel();
+        bluePanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +73,45 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        redPanel.setBackground(new java.awt.Color(255, 229, 229));
+
+        javax.swing.GroupLayout redPanelLayout = new javax.swing.GroupLayout(redPanel);
+        redPanel.setLayout(redPanelLayout);
+        redPanelLayout.setHorizontalGroup(
+            redPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        redPanelLayout.setVerticalGroup(
+            redPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        greenPanel.setBackground(new java.awt.Color(229, 255, 229));
+
+        javax.swing.GroupLayout greenPanelLayout = new javax.swing.GroupLayout(greenPanel);
+        greenPanel.setLayout(greenPanelLayout);
+        greenPanelLayout.setHorizontalGroup(
+            greenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 125, Short.MAX_VALUE)
+        );
+        greenPanelLayout.setVerticalGroup(
+            greenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        bluePanel.setBackground(new java.awt.Color(229, 229, 255));
+
+        javax.swing.GroupLayout bluePanelLayout = new javax.swing.GroupLayout(bluePanel);
+        bluePanel.setLayout(bluePanelLayout);
+        bluePanelLayout.setHorizontalGroup(
+            bluePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 125, Short.MAX_VALUE)
+        );
+        bluePanelLayout.setVerticalGroup(
+            bluePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,10 +119,19 @@ public class Client extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clientComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clientTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clientButton, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(redPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(greenPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bluePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                            .addComponent(clientComboBox, 0, 388, Short.MAX_VALUE)
+                            .addComponent(clientTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                            .addComponent(clientButton, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -94,6 +142,11 @@ public class Client extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(greenPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(redPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bluePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clientComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -184,17 +237,18 @@ public class Client extends javax.swing.JFrame {
 
             // IP address to the PC to connect to.
             // Port number to connect to.
-            clientSocket = new Socket("200.19.188.1", 20400);
+//            clientSocket = new Socket("200.19.188.1", 20400);
+            clientSocket = new Socket("localhost", 9999);
 
-            output = new PrintStream(clientSocket.getOutputStream());
+//            output = new PrintStream(clientSocket.getOutputStream());
             dataOutput = new DataOutputStream(clientSocket.getOutputStream());
 //            output.println("Hello Server");
             
             Message sendThis = new Message(1);
-            dataOutput.writeInt(sendThis.getByteArray().length); // write length of the message
+//            dataOutput.writeInt(sendThis.getByteArray().length); // write length of the message
             dataOutput.write(sendThis.getByteArray());           // write the message
             
-            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             dataInput = new DataInputStream(clientSocket.getInputStream());
 
             while (clientSocket.isConnected()) {
@@ -202,18 +256,62 @@ public class Client extends javax.swing.JFrame {
 //                clientTextArea.append("Server: " + message + "\n");
 //                System.out.println("Server: " + message);
                 
-                int length = dataInput.readInt();                    // read length of incoming message
+                int length = dataInput.available();                    // read length of incoming message
                 if(length > 0) {
-                    byte[] testMessage = new byte[length];
-                    dataInput.readFully(testMessage, 0, testMessage.length); // read the message
-                    System.out.println("Byte Aray: " + bytesToHexString(testMessage));
-                    clientTextArea.append("Byte Aray: " + bytesToHexString(testMessage) + "\n");
-                    
-                    Message message = new Message(testMessage);
-//                    System.out.println("Byte 1: " + message.idByte);
-//                    System.out.println("Byte 2: " + message.payloadLengthByte);
-//                    System.out.println("Byte 3: " + message.messageCodeByte);
-                    
+
+//                    while( dataInput.available() > 0) {
+                       // read one single byte
+                       byte startByte = dataInput.readByte();
+                       if (startByte == (byte) 0x78) {
+                            System.out.println("Found a byte");
+                            byte idByte = dataInput.readByte();
+                            byte messageCodeByte = dataInput.readByte();
+                            byte payloadLengthByte = dataInput.readByte();
+                            byte[] messageBytes = new byte[payloadLengthByte];
+                            
+                            System.out.println("Message length: " + payloadLengthByte);
+                            
+                            for (int i = 0; i < payloadLengthByte - 4; i++) {
+                                messageBytes[i] = dataInput.readByte();
+                            }
+                            
+//                            byte[] testMessage = new byte[length];
+//                            dataInput.readFully(testMessage, 0, testMessage.length); // read the message
+//                            System.out.println("Byte Aray: " + bytesToHexString(testMessage));
+//                            clientTextArea.append("Byte Aray: " + bytesToHexString(testMessage) + "\n");
+                            
+                            Message message = new Message(idByte, messageCodeByte, payloadLengthByte , messageBytes);
+                            switch (message.getMessageCodeByte()) {
+                                case (byte) 0xF1:
+                                    // Red on
+                                    redPanel.setBackground(Color.red);
+                                    break;
+                                case (byte) 0xF2:
+                                    // Red off
+                                    redPanel.setBackground(new Color(255, 219, 219));
+                                    break;
+                                case (byte) 0xF3:
+                                    // Green on
+                                    greenPanel.setBackground(Color.green);
+                                    break;
+                                case (byte) 0xF4:
+                                    // Green off
+                                    greenPanel.setBackground(new Color(219, 255, 219));
+                                    break;
+                                case (byte) 0xF5:
+                                    // Blue on
+                                    bluePanel.setBackground(Color.blue);
+                                    break;
+                                case (byte) 0xF6:
+                                    // Blue off
+                                    bluePanel.setBackground(new Color(219, 219, 255));
+                                    break;
+                                default:
+                                    break;
+                            }
+//                           break;
+                        }
+//                    }                    
                 }
                 
 
@@ -247,10 +345,13 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bluePanel;
     private javax.swing.JButton clientButton;
     private javax.swing.JComboBox clientComboBox;
     private javax.swing.JTextArea clientTextArea;
     private javax.swing.JTextField clientTextField;
+    private javax.swing.JPanel greenPanel;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel redPanel;
     // End of variables declaration//GEN-END:variables
 }
