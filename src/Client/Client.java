@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -168,11 +169,11 @@ public class Client extends javax.swing.JFrame {
             if (clientComboBox.getSelectedIndex() != 0) {
 //                if (!"".equals(clientTextField.getText())) {
                     //            String reply = scan.nextLine();
-                    String reply = clientTextField.getText();
+//                    String reply = clientTextField.getText();
                     Message message = new Message(clientComboBox.getSelectedIndex());
                     
                     try {
-                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
+//                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
                         dataOutput.write(message.getByteArray());           // write the message
                     } catch (IOException ex) {
                         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,13 +185,22 @@ public class Client extends javax.swing.JFrame {
 
                     clientTextField.setText("");
 //                }
-            }
-            
-            
-            
-            
+            } else {
+                String reply = clientTextField.getText();
+                byte[] replyBytes = reply.getBytes(Charset.forName("UTF-8"));
+                Message message = new Message(replyBytes, true);
+                
+                try {
+//                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
+                        dataOutput.write(message.getByteArray());           // write the message
+                    } catch (IOException ex) {
+                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                //                    output.println(reply);
+//                    clientTextArea.append("Client: " + reply + "\n");
+//                    System.out.println("Client: " + reply);
+            }     
         }
-
     }//GEN-LAST:event_clientButtonActionPerformed
 
     /**
@@ -237,8 +247,8 @@ public class Client extends javax.swing.JFrame {
 
             // IP address to the PC to connect to.
             // Port number to connect to.
-//            clientSocket = new Socket("200.19.188.1", 20400);
-            clientSocket = new Socket("localhost", 9999);
+            clientSocket = new Socket("200.19.188.1", 20400);
+//            clientSocket = new Socket("localhost", 9999);
 
 //            output = new PrintStream(clientSocket.getOutputStream());
             dataOutput = new DataOutputStream(clientSocket.getOutputStream());
@@ -263,13 +273,13 @@ public class Client extends javax.swing.JFrame {
                        // read one single byte
                        byte startByte = dataInput.readByte();
                        if (startByte == (byte) 0x78) {
-                            System.out.println("Found a byte");
+//                            System.out.println("Found a byte");
                             byte idByte = dataInput.readByte();
                             byte messageCodeByte = dataInput.readByte();
                             byte payloadLengthByte = dataInput.readByte();
                             byte[] messageBytes = new byte[payloadLengthByte];
                             
-                            System.out.println("Message length: " + payloadLengthByte);
+//                            System.out.println("Message length: " + payloadLengthByte);
                             
                             for (int i = 0; i < payloadLengthByte - 4; i++) {
                                 messageBytes[i] = dataInput.readByte();

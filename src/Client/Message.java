@@ -38,8 +38,18 @@ public class Message {
         }
     };
     
-    Message(byte[] message) {
-        unpackMessage(message);
+    Message(byte[] message, boolean toPack) {
+        if (toPack) {
+            this.idByte = (byte) 0x05;
+            this.messageCodeByte = (byte) 0x72;
+            byte[] deleteMe = intToByteArray(message.length + 4);
+            this.payloadLengthByte = (byte) deleteMe[deleteMe.length - 1];
+        
+            this.messageBytes = message;
+            packMessage();
+        } else {
+            unpackMessage(message);
+        }
     }
     
     Message(byte idByte, byte messageCodeByte, byte payloadLengthByte, byte[] messageBytes) {
