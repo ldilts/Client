@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -327,6 +329,26 @@ public class Client extends javax.swing.JFrame {
                                 case (byte) 0xF6:
                                     // Blue off
                                     bluePanel.setBackground(new Color(219, 219, 255));
+                                    break;
+//                                case (byte) 0xF7:
+//                                    
+//                                    break;
+                                case (byte) 0xF8:
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                                    String sCertDate = dateFormat.format(new Date());
+//                                    String timeStamp = sdf.toString();
+                                    int timeStampPayloadLength = sCertDate.getBytes().length + 4;
+                                    Message timeReply = new Message((byte) 0x05, (byte) 0x72, (byte) timeStampPayloadLength, sCertDate.getBytes());
+                                    
+                                    try {
+                                    dataOutput.write(timeReply.getByteArray());           // write the message
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    break;
+                                case (byte) 0xF9:
+                                    String decodedMessage = new String(message.getMessageBytes(), "UTF-8");  
+                                    clientTextArea.append("Server: " + decodedMessage + "\n");
                                     break;
                                 default:
                                     String notSupported = "Not Suppported";

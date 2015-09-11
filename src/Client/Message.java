@@ -79,6 +79,10 @@ public class Message {
         return this.messageCodeByte;
     }
     
+    public byte[] getMessageBytes() {
+        return this.messageBytes;
+    }
+    
     private void packMessage() {
 //        byteArray =  new byte[] {
 //            this.startByte, this.idByte, this.messageCodeByte, this.payloadLengthByte
