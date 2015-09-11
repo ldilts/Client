@@ -292,6 +292,18 @@ public class Client extends javax.swing.JFrame {
                             
                             Message message = new Message(idByte, messageCodeByte, payloadLengthByte , messageBytes);
                             switch (message.getMessageCodeByte()) {
+                                case (byte) 0x4B:
+                                    // Keep Alive
+                                    byte[] keepAlive = new byte[] {
+                                        (byte)0x78, (byte) 0x05, (byte) 0x72, (byte) 0x06, (byte) 0x4B, (byte) 0x41       
+                                    };
+                                    try {
+//                                  dataOutput.writeInt(message.getByteArray().length); // write length of the message
+                                    dataOutput.write(keepAlive);           // write the message
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    break;
                                 case (byte) 0xF1:
                                     // Red on
                                     redPanel.setBackground(Color.red);
@@ -317,6 +329,15 @@ public class Client extends javax.swing.JFrame {
                                     bluePanel.setBackground(new Color(219, 219, 255));
                                     break;
                                 default:
+                                    String notSupported = "Not Suppported";
+                                    int payloadLength = notSupported.getBytes().length + 4;
+                                    Message reply = new Message((byte) 0x05, (byte) 0x72, (byte) payloadLength, notSupported.getBytes());
+                                    
+                                    try {
+                                    dataOutput.write(reply.getByteArray());           // write the message
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     break;
                             }
 //                           break;
@@ -334,15 +355,15 @@ public class Client extends javax.swing.JFrame {
         }
     }
     
-    private static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                                 + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
+//    private static byte[] hexStringToByteArray(String s) {
+//        int len = s.length();
+//        byte[] data = new byte[len / 2];
+//        for (int i = 0; i < len; i += 2) {
+//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+//                                 + Character.digit(s.charAt(i+1), 16));
+//        }
+//        return data;
+//    }
    
     public static String bytesToHexString(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
