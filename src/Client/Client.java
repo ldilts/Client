@@ -36,8 +36,10 @@ public class Client extends javax.swing.JFrame {
     
     public int currentID = 0;
     
-    private static final String SERVER_ADDRESS = "200.19.188.1";
-    private static final int TCP_SERVER_PORT = 20400;
+//    private static final String SERVER_ADDRESS = "200.19.188.1";
+//    private static final int TCP_SERVER_PORT = 20400;
+    private static final String SERVER_ADDRESS = "localhost";
+    private static final int TCP_SERVER_PORT = 9999;
     
 //    private Scanner scan = new Scanner(System.in);
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
