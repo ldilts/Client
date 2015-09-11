@@ -38,9 +38,9 @@ public class Message {
         }
     };
     
-    Message(byte[] message, boolean toPack) {
+    Message(byte idByte, byte[] message, boolean toPack) {
         if (toPack) {
-            this.idByte = (byte) 0x05;
+            this.idByte = idByte;
             this.messageCodeByte = (byte) 0x72;
             byte[] deleteMe = intToByteArray(message.length + 4);
             this.payloadLengthByte = (byte) deleteMe[deleteMe.length - 1];
@@ -61,8 +61,8 @@ public class Message {
         this.packMessage();
     }
     
-    Message(int action) {
-        this.idByte = (byte) 0x05;
+    Message(byte idByte, int action) {
+        this.idByte = idByte;
         this.messageCodeByte = (byte) 0x72;
         byte[] deleteMe = intToByteArray(actionMessages[action].length + 4);
         this.payloadLengthByte = (byte) deleteMe[deleteMe.length - 1];
@@ -84,13 +84,6 @@ public class Message {
     }
     
     private void packMessage() {
-//        byteArray =  new byte[] {
-//            this.startByte, this.idByte, this.messageCodeByte, this.payloadLengthByte
-//        };
-//        
-//        for (int i = 0; i < this.messageBytes.length; i++) {
-//            byteArray[byteArray.length - 1] = this.messageBytes[i];
-//        }
         byteArray =  new byte[this.messageBytes.length + 4];
         this.byteArray[0] = this.startByte;
         this.byteArray[1] = this.idByte;

@@ -6,17 +6,18 @@
 package Client;
 
 import java.awt.Color;
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+//import java.io.InputStreamReader;
+//import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.Random;
+//import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +33,11 @@ public class Client extends javax.swing.JFrame {
     private DataInputStream dataInput;
 //    private PrintStream output;
     private DataOutputStream dataOutput;
+    
+    public int currentID = 0;
+    
+    private static final String SERVER_ADDRESS = "200.19.188.1";
+    private static final int TCP_SERVER_PORT = 20400;
     
 //    private Scanner scan = new Scanner(System.in);
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -164,45 +170,51 @@ public class Client extends javax.swing.JFrame {
 
     private void clientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientButtonActionPerformed
         // TODO add your handling code here:
-        if (clientSocket.isConnected()) {
+        if (hostAvailabilityCheck()) {
+            if (clientSocket.isConnected()) {
+            
 //            System.out.println("Working? " + (String)clientComboBox.getSelectedItem());
 //            (String)clientComboBox.getSelectedItem();
             
-            if (clientComboBox.getSelectedIndex() != 0) {
-//                if (!"".equals(clientTextField.getText())) {
-                    //            String reply = scan.nextLine();
-//                    String reply = clientTextField.getText();
-                    Message message = new Message(clientComboBox.getSelectedIndex());
-                    
-                    try {
-//                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
-                        dataOutput.write(message.getByteArray());           // write the message
-                    } catch (IOException ex) {
-                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
-//                    output.println(reply);
-//                    clientTextArea.append("Client: " + reply + "\n");
-//                    System.out.println("Client: " + reply);
+                if (clientComboBox.getSelectedIndex() != 0) {
+    //                if (!"".equals(clientTextField.getText())) {
+                        //            String reply = scan.nextLine();
+    //                    String reply = clientTextField.getText();
+                        Message message = new Message((byte) this.currentID, clientComboBox.getSelectedIndex());
 
-                    clientTextField.setText("");
-//                }
-            } else {
-                String reply = clientTextField.getText();
-                byte[] replyBytes = reply.getBytes(Charset.forName("UTF-8"));
-                Message message = new Message(replyBytes, true);
-                
-                try {
-//                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
-                        dataOutput.write(message.getByteArray());           // write the message
-                    } catch (IOException ex) {
-                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                //                    output.println(reply);
-//                    clientTextArea.append("Client: " + reply + "\n");
-//                    System.out.println("Client: " + reply);
-            }     
+                        try {
+    //                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
+                            dataOutput.write(message.getByteArray());           // write the message
+                        } catch (IOException ex) {
+                            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+    //                    output.println(reply);
+    //                    clientTextArea.append("Client: " + reply + "\n");
+    //                    System.out.println("Client: " + reply);
+
+                        clientTextField.setText("");
+    //                }
+                } else {
+                    String reply = clientTextField.getText();
+                    byte[] replyBytes = reply.getBytes(Charset.forName("UTF-8"));
+                    Message message = new Message((byte) this.currentID, replyBytes, true);
+
+                    try {
+    //                        dataOutput.writeInt(message.getByteArray().length); // write length of the message
+                            dataOutput.write(message.getByteArray());           // write the message
+                        } catch (IOException ex) {
+                            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    //                    output.println(reply);
+    //                    clientTextArea.append("Client: " + reply + "\n");
+    //                    System.out.println("Client: " + reply);
+                }     
+            }
+        } else {
+            clientTextArea.append("Server offline. :( " + "\n");
         }
+        
     }//GEN-LAST:event_clientButtonActionPerformed
 
     /**
@@ -238,7 +250,10 @@ public class Client extends javax.swing.JFrame {
 //                new Client().setVisible(true);
 //            }
 //        });
+       
         Client client = new Client();
+        Random rand = new Random();
+        client.currentID = rand.nextInt((255 - 0) + 1) + 0;
         client.setVisible(true);
         client.run();
     }
@@ -249,20 +264,20 @@ public class Client extends javax.swing.JFrame {
 
             // IP address to the PC to connect to.
             // Port number to connect to.
-            clientSocket = new Socket("200.19.188.1", 20400);
+            clientSocket = new Socket(SERVER_ADDRESS, TCP_SERVER_PORT);
 //            clientSocket = new Socket("localhost", 9999);
 
 //            output = new PrintStream(clientSocket.getOutputStream());
             dataOutput = new DataOutputStream(clientSocket.getOutputStream());
 //            output.println("Hello Server");
             
-            Message sendThis = new Message(1);
+            Message sendThis = new Message((byte) this.currentID, 1);
 //            dataOutput.writeInt(sendThis.getByteArray().length); // write length of the message
             dataOutput.write(sendThis.getByteArray());           // write the message
             
 //            input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             dataInput = new DataInputStream(clientSocket.getInputStream());
-
+            
             while (clientSocket.isConnected()) {
 //                String message = input.readLine();
 //                clientTextArea.append("Server: " + message + "\n");
@@ -309,26 +324,32 @@ public class Client extends javax.swing.JFrame {
                                 case (byte) 0xF1:
                                     // Red on
                                     redPanel.setBackground(Color.red);
+                                    confirmationReply();
                                     break;
                                 case (byte) 0xF2:
                                     // Red off
                                     redPanel.setBackground(new Color(255, 219, 219));
+                                    confirmationReply();
                                     break;
                                 case (byte) 0xF3:
                                     // Green on
                                     greenPanel.setBackground(Color.green);
+                                    confirmationReply();
                                     break;
                                 case (byte) 0xF4:
                                     // Green off
                                     greenPanel.setBackground(new Color(219, 255, 219));
+                                    confirmationReply();
                                     break;
                                 case (byte) 0xF5:
                                     // Blue on
                                     bluePanel.setBackground(Color.blue);
+                                    confirmationReply();
                                     break;
                                 case (byte) 0xF6:
                                     // Blue off
                                     bluePanel.setBackground(new Color(219, 219, 255));
+                                    confirmationReply();
                                     break;
 //                                case (byte) 0xF7:
 //                                    
@@ -349,6 +370,7 @@ public class Client extends javax.swing.JFrame {
                                 case (byte) 0xF9:
                                     String decodedMessage = new String(message.getMessageBytes(), "UTF-8");  
                                     clientTextArea.append("Server: " + decodedMessage + "\n");
+                                    confirmationReply();
                                     break;
                                 default:
                                     String notSupported = "Not Suppported";
@@ -377,6 +399,18 @@ public class Client extends javax.swing.JFrame {
         }
     }
     
+    private void confirmationReply() {
+        String notSupported = "OK";
+        int payloadLength = notSupported.getBytes().length + 4;
+        Message reply = new Message((byte) 0x05, (byte) 0x72, (byte) payloadLength, notSupported.getBytes());
+
+        try {
+        dataOutput.write(reply.getByteArray());           // write the message
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 //    private static byte[] hexStringToByteArray(String s) {
 //        int len = s.length();
 //        byte[] data = new byte[len / 2];
@@ -396,6 +430,15 @@ public class Client extends javax.swing.JFrame {
         }
         return new String(hexChars);
     }
+    
+    public static boolean hostAvailabilityCheck() { 
+    try (Socket s = new Socket(SERVER_ADDRESS, TCP_SERVER_PORT)) {
+        return true;
+    } catch (IOException ex) {
+        /* ignore */
+    }
+    return false;
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bluePanel;
